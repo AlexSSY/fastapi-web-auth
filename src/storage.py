@@ -11,3 +11,7 @@ def store(key, value):
 
 def retrieve(key):
     return r.get(key)
+
+
+def delete(key):
+    r.delete(key)

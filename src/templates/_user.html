@@ -9,6 +9,8 @@
     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
         <a href="#" class="dropdown-item">Profile</a>
         <div class="dropdown-divider"></div>
-        <a href="./sign-in.html" class="dropdown-item">Logout</a>
+        <form action="{{ request.url_for('logout') }}" method="post">
+            <button class="dropdown-item">Logout</button>
+        </form>
     </div>
 </div>
