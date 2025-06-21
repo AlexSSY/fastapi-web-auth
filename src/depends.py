@@ -3,7 +3,7 @@ from fastapi import Depends, Cookie, HTTPException
 from . import config, db, storage
 
 
-def get_current_user(session_token = Cookie(default=None)):
+def get_current_user(session_token = Cookie(default=None, alias=config.COOKIE_NAME)):
     user_class = config.get_user_class()
     
     if session_token is None:

@@ -6,6 +6,29 @@
   <title>Document</title>
   <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.3.2/dist/css/tabler.min.css">
+  <script>
+    function restoreDarkMode() {
+      const el = document.documentElement;
+
+      darkMode = localStorage.getItem('theme')
+      if (darkMode) {
+        el.setAttribute('data-bs-theme', 'dark');
+      }
+    }
+    restoreDarkMode();
+    function toggleDarkMode(event) {
+      const el = document.documentElement;
+
+      if (el.getAttribute('data-bs-theme') === 'dark') {
+        el.removeAttribute('data-bs-theme');
+        localStorage.removeItem('theme')
+      } else {
+        el.setAttribute('data-bs-theme', 'dark');
+        localStorage.setItem('theme', 'dark')
+      }
+      event.preventDefault();
+    }
+  </script>
 </head>
 <body>
   <div class="page">

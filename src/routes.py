@@ -1,4 +1,4 @@
-from fastapi import Form, Request, Depends, HTTPException
+from fastapi import Form, Request, Depends
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 import secrets
@@ -7,7 +7,7 @@ from .app import app
 from .templating import templating
 from .depends import user_dependency
 from .db import get_session
-from . import config, storage, helpers
+from . import config, storage, helpers, views
 
 
 @app.get("/")
@@ -15,14 +15,9 @@ def root(request: Request, user = user_dependency):
     return templating.TemplateResponse(request, "root.html", {'user': user})
 
 
-@app.get("/protected", name="protected")
-def protected(request: Request, user=user_dependency):
-    return user
-
-
 @app.get("/login", name="login")
 def login(request: Request):
-    return templating.TemplateResponse(request, "login.html")
+    return views.login_view(request)
 
 
 @app.post("/login")
@@ -41,4 +36,4 @@ async def create_auth(
         response.set_cookie(key=config.COOKIE_NAME, value=session_token, httponly=True, secure=False)
         storage.store(session_token, user.id)
         return response
-    return HTTPException(status_code=403, detail='invalid credentials')
+    return views.login_view(request, {'username_error': 'invalid_credentials'}, 403)

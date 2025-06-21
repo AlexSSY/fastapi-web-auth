@@ -1,7 +1,8 @@
 <form action="{{ request.url_for('login') }}" method="post">
   <div class="mb-3">
     <label for="username" class="form-label">Email</label>
-    <input type="email" name="username" id="username" class="form-control">
+    <input type="email" name="username" id="username" class="form-control{% if username_error %} is-invalid{% endif %}">
+    {% if username_error %}<div class="invalid-feedback">{{ username_error }}</div>{% endif %}
   </div>
   <div class="mb-3">
     <label for="password" class="form-label">Password</label>
