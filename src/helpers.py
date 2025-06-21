@@ -11,5 +11,5 @@ def hash_password(plain_password):
     return pbkdf2_sha256.hash(SECRET_KEY + plain_password)
 
 
-def verify_passwor(plain_password, hashed_password):
+def verify_password(plain_password, hashed_password):
     return pbkdf2_sha256.verify(SECRET_KEY + plain_password, hashed_password)

@@ -7,6 +7,7 @@ load_dotenv()
 USER_MODEL = 'src.models.User'
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
+COOKIE_NAME = "session_token"
 
 
 def get_user_class():
