@@ -11,8 +11,8 @@ from . import config, storage, helpers, views
 
 
 @app.get("/")
-def root(request: Request, user = user_dependency):
-    return templating.TemplateResponse(request, "root.html", {'user': user})
+def root(request: Request, user=user_dependency):
+    return templating.TemplateResponse(request, "root.html", {"user": user})
 
 
 @app.get("/login", name="login")
@@ -22,27 +22,24 @@ def login(request: Request):
 
 @app.post("/login")
 async def create_auth(
-    request: Request,
-    username: str = Form(...),
-    password: str = Form(...),
-    session: Session = Depends(get_session),
+    request: Request, password: str = Form(...)
 ):
-    user_class = config.get_user_class()
-    username_field = getattr(user_class, "email")  # ! hardcoded
-    user = session.query(user_class).where(username_field == username).first()
-    if user is not None and helpers.verify_password(password, user.password_hash):
-        session_token = secrets.token_hex(16)
+    form_data = await request.form()
+    username = form_data.get(config.USERNAME_FIELD_NAME)
+    user, session_token = helpers.authenticate(username, password)
+    if user is not None:
         response = RedirectResponse(url="/", status_code=302)
-        response.set_cookie(key=config.COOKIE_NAME, value=session_token, httponly=True, secure=False)
+        response.set_cookie(
+            key=config.COOKIE_NAME, value=session_token, httponly=True, secure=False
+        )
         storage.store(session_token, user.id)
         return response
-    return views.login_view(request, {'username_error': 'invalid_credentials'}, 422)
+    return views.login_view(request, {"username_error": "invalid_credentials"}, 422)
 
 
-@app.post('/logout', name='logout')
-async def logout(request: Request, session_token: str = session_token_dep):
-    if session_token:
-        storage.delete(session_token)
+@app.post("/logout", name="logout")
+async def logout(session_token: str = session_token_dep):
+    storage.delete(session_token)
     response = RedirectResponse(url="/login", status_code=302)
     response.delete_cookie(key=config.COOKIE_NAME)
     return response

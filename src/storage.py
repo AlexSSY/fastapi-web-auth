@@ -14,4 +14,5 @@ def retrieve(key):
 
 
 def delete(key):
-    r.delete(key)
+    if key is not None:
+        r.delete(key)
